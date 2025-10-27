@@ -1,0 +1,117 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeepSafe - AI-Powered Deepfake Detection</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <!-- CSRF Token for Django -->
+    <input type="hidden" id="csrfToken" value="{{ csrf_token }}">
+
+    <!-- Header Section -->
+    <header>
+        <h1>DeepSafe</h1>
+        <p class="tagline">AI-Powered Deepfake Detection for Video & Audio</p>
+    </header>
+
+    <!-- Main Container -->
+    <main class="container">
+        <!-- Upload Section -->
+        <section class="upload-section">
+            <h2>Upload Media File</h2>
+
+            <div class="upload-area">
+                <input type="file" id="fileInput" accept="video/mp4,video/avi,video/x-msvideo,video/quicktime,video/webm,audio/mpeg,audio/wav,audio/mp4,audio/ogg" aria-label="Upload video or audio file">
+                <label for="fileInput" class="upload-label">
+                    <span class="upload-icon">📁</span>
+                    <span>Click to select or drag & drop file here</span>
+                </label>
+            </div>
+
+            <div class="file-info">
+                <p class="supported-formats">
+                    <strong>Supported:</strong> MP4, AVI, MOV, WEBM (video) | MP3, WAV, M4A, OGG (audio)
+                </p>
+                <p class="size-limit">
+                    <strong>Max size:</strong> 100MB (video), 50MB (audio)
+                </p>
+            </div>
+
+            <div id="selectedFileInfo" class="selected-file" style="display: none;">
+                <p><strong>Selected:</strong> <span id="fileName"></span> (<span id="fileSize"></span>)</p>
+            </div>
+
+            <div class="checkbox-container" id="analyzeAudioContainer" style="display: none;">
+                <label>
+                    <input type="checkbox" id="analyzeAudioCheckbox">
+                    Also analyze audio track from video
+                </label>
+            </div>
+
+            <button id="analyzeButton" class="btn-analyze" disabled aria-label="Analyze file for deepfakes">
+                <span id="buttonText">Analyze for Deepfakes</span>
+                <span id="loadingSpinner" class="spinner" style="display: none;"></span>
+            </button>
+
+            <p id="progressText" class="progress-text" style="display: none;">Processing...</p>
+        </section>
+
+        <!-- Results Section -->
+        <section id="resultsSection" class="results-section" style="display: none;" aria-live="polite">
+            <h2>Analysis Results</h2>
+
+            <!-- Video Results -->
+            <div id="videoResults" class="result-card" style="display: none;">
+                <h3>Video Analysis</h3>
+                <div class="prediction-badge" id="videoPredictionBadge"></div>
+                <div class="probability-display">
+                    <div id="videoProbabilityBar" class="probability-bar-container"></div>
+                </div>
+                <div class="metadata">
+                    <p><strong>Frames Analyzed:</strong> <span id="videoFramesAnalyzed"></span></p>
+                    <p><strong>Processing Time:</strong> <span id="videoProcessingTime"></span>s</p>
+                </div>
+            </div>
+
+            <!-- Audio Results -->
+            <div id="audioResults" class="result-card" style="display: none;">
+                <h3>Audio Analysis</h3>
+                <div class="prediction-badge" id="audioPredictionBadge"></div>
+                <div class="probability-display">
+                    <div id="audioProbabilityBar" class="probability-bar-container"></div>
+                </div>
+                <div class="metadata">
+                    <p><strong>Segments Analyzed:</strong> <span id="audioSegmentsAnalyzed"></span></p>
+                    <p><strong>Duration:</strong> <span id="audioDuration"></span>s</p>
+                </div>
+            </div>
+
+            <!-- Combined Results -->
+            <div id="combinedResults" class="result-card combined-card" style="display: none;">
+                <h3>Combined Analysis</h3>
+                <div class="prediction-badge" id="combinedPredictionBadge"></div>
+                <div class="probability-display">
+                    <div id="combinedProbabilityBar" class="probability-bar-container"></div>
+                </div>
+                <p class="final-verdict">Final Verdict: <strong id="finalVerdict"></strong></p>
+            </div>
+        </section>
+
+        <!-- Error Section -->
+        <section id="errorSection" class="error-section" style="display: none;" aria-live="assertive">
+            <h3>Error</h3>
+            <p id="errorMessage"></p>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 DeepSafe - AI-Based Deepfake Detection System</p>
+    </footer>
+
+    <script src="{% static 'js/app.js' %}"></script>
+</body>
+</html>
