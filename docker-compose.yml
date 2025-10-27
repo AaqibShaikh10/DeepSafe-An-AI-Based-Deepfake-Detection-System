@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: deepsafe_web
+    ports:
+      - "8000:8000"
+    volumes:
+      # Mount models directory (so you can add trained models without rebuilding)
+      - ./models:/app/models:ro
+      # Mount uploads directory (for temporary file storage)
+      - ./uploads:/app/uploads
+      # Optional: Mount database for persistence
+      - ./backend/db.sqlite3:/app/backend/db.sqlite3
+    environment:
+      - DEBUG=False
+      - SECRET_KEY=${SECRET_KEY:-change-this-secret-key-in-production}
+      - ALLOWED_HOSTS=*
+      - MAX_VIDEO_SIZE_MB=100
+      - MAX_AUDIO_SIZE_MB=50
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # Optional: Add PostgreSQL for production
+  # db:
+  #   image: postgres:15-alpine
+  #   container_name: deepsafe_db
+  #   environment:
+  #     - POSTGRES_DB=deepsafe
+  #     - POSTGRES_USER=deepsafe
+  #     - POSTGRES_PASSWORD=change-this-password
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+  #   restart: unless-stopped
+
+# volumes:
+#   postgres_data:
